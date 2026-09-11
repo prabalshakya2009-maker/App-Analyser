@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MAX_FILE_SIZE_BYTES=104857600
+      - RATE_LIMIT_RPM=60
+    volumes:
+      - report_data:/tmp/appsec_sentinel/reports
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  report_data:
