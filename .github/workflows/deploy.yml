@@ -1,4 +1,5 @@
-name: Deploy CipherVault PWA to GitHub Pages
+// filepath: .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -18,9 +19,6 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,21 +27,28 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - name: Install dependencies
-        run: npm install
+      - name: Locate, Install & Build Frontend
+        run: |
+          PKG_FILE=$(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1)
+          if [ -z "$PKG_FILE" ]; then
+            echo "Error: package.json not found in repository."
+            find . -maxdepth 3
+            exit 1
+          fi
+          APP_DIR=$(dirname "$PKG_FILE")
+          echo "Found frontend at: $APP_DIR"
+          cd "$APP_DIR"
+          npm install
+          npm run build
+          mkdir -p "$GITHUB_WORKSPACE/_site"
+          cp -r dist/* "$GITHUB_WORKSPACE/_site/"
 
-      - name: Build production bundle
-        run: npm run build
-
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload dist artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
