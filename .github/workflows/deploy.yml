@@ -1,11 +1,9 @@
-// filepath: .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 permissions:
@@ -18,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,26 +27,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Locate, Install & Build Frontend
+      - name: Build frontend
         run: |
-          PKG_FILE=$(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1)
-          if [ -z "$PKG_FILE" ]; then
-            echo "Error: package.json not found in repository."
-            find . -maxdepth 3
-            exit 1
-          fi
-          APP_DIR=$(dirname "$PKG_FILE")
-          echo "Found frontend at: $APP_DIR"
-          cd "$APP_DIR"
+          cd app-analyzer/frontend
           npm install
           npm run build
-          mkdir -p "$GITHUB_WORKSPACE/_site"
-          cp -r dist/* "$GITHUB_WORKSPACE/_site/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: app-analyzer/frontend/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
