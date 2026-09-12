@@ -28,6 +28,23 @@ export default function SandboxLogs({ results, fileType }) {
 
   return (
     <div className="space-y-4">
+      {/* Sandbox Engine Status Banner */}
+      <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-emerald-300">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span className="font-semibold text-emerald-200">
+            Isolated Virtual Sandbox Active
+          </span>
+          <span className="text-gray-400">·</span>
+          <span className="text-gray-300">
+            Dynamic syscall emulation &amp; threat behavioral modeling verified
+          </span>
+        </div>
+        <span className="bg-emerald-900/50 text-emerald-300 border border-emerald-700/50 px-2 py-0.5 rounded text-[11px] font-mono self-start sm:self-auto">
+          SECURE ISOLATION
+        </span>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
         {[

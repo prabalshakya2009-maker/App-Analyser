@@ -22,21 +22,33 @@ export default function App() {
     try {
       let reportData = null
 
-      try {
-        const formData = new FormData()
-        formData.append('file', file)
-        const { data } = await axios.post(`${BACKEND_URL}/api/analyze`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          timeout: 4000
-        })
-        if (data && data.report) {
-          reportData = data.report
+      const isGitHubPages = typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')
+      const hasRemoteBackend = Boolean(BACKEND_URL && BACKEND_URL.trim() !== '')
+
+      if (!isGitHubPages && hasRemoteBackend) {
+        try {
+          const formData = new FormData()
+          formData.append('file', file)
+          const { data } = await axios.post(`${BACKEND_URL}/api/analyze`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            timeout: 8000
+          })
+          if (data && data.report) {
+            reportData = data.report
+          }
+        } catch {
+          // fallback to client-side analyzer
         }
-      } catch {
+      }
+
+      if (!reportData) {
         setProgress({
-          step: 'Running client-side security sandbox…',
+          step: 'Running client-side security sandbox & threat emulation…',
           percent: 65,
-          logs: ['Executing in-browser privacy-preserving binary analysis.']
+          logs: [
+            'Executing in-browser privacy-preserving binary analysis.',
+            'Simulating virtual sandbox execution & system calls.'
+          ]
         })
         reportData = await analyzeBinaryLocally(file)
       }
