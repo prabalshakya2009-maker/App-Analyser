@@ -32,6 +32,7 @@ export default function ReportView({ report, onReset }) {
             {' · '}
             {(fileSize / 1024 / 1024).toFixed(2)} MB
           </p>
+        </div>
         <div className="flex items-center gap-2">
           <a
             href={`/api/reports/${report.reportId || ''}/markdown`}
