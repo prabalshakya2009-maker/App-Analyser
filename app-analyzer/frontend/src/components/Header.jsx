@@ -8,7 +8,12 @@ export default function Header() {
           <span className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded ml-1">BETA</span>
         </div>
         <div className="flex items-center gap-4 text-sm text-gray-400">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+          <a href="./AppGuard_Security_Guide.pdf" target="_blank" rel="noopener noreferrer"
+            className="text-xs font-medium text-brand-400 hover:text-white border border-brand-800/60 bg-brand-950/40 hover:bg-brand-900/60 px-2.5 py-1 rounded-lg transition flex items-center gap-1.5">
+            <span>📄</span>
+            <span>Security Guide (PDF)</span>
+          </a>
+          <a href="https://github.com/prabalshakya2009-maker/App-Analyser" target="_blank" rel="noopener noreferrer"
             className="hover:text-white transition flex items-center gap-1">
             <span>GitHub</span>
           </a>
